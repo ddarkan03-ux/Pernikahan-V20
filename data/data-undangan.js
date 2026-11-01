@@ -71,7 +71,7 @@ window.DATA = {
   "panelAdmin": {
     "ucapanPublik": true,
     "turutMengundang": true,
-    "rekening": true,
+    "rekening": false,
     "urutanNama": false,
     "pesanWa": true,
     "pratinjauLink": true
