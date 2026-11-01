@@ -87,20 +87,20 @@ label.l{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercas
   <div id="pUcapan" class="hide"><div class="card" id="sumU"></div><div class="card" id="lUcapan"></div></div>
 
   <div id="pSet" class="hide">
-   <div class="card">
-    <div class="sw"><span>Tampilkan ucapan ke tamu lain</span><input type="checkbox" id="cUp"></div>
+   <div class="card" id="cSw">
+    <div class="sw" id="rUp"><span>Tampilkan ucapan ke tamu lain</span><input type="checkbox" id="cUp"></div>
     <div class="sw" id="rTm"><span>Tampilkan "Turut Mengundang"</span><input type="checkbox" id="cTm"></div>
     <div class="sw" id="rR1"><span>Tampilkan rekening 1</span><input type="checkbox" id="cR1"></div>
     <div class="sw" id="rR2"><span>Tampilkan rekening 2</span><input type="checkbox" id="cR2"></div>
-    <div class="sw"><span>Klien (pemesan) dari pihak<br><small style="color:var(--mut)">Nama pihak klien tampil lebih dulu</small></span><select id="cUr" style="padding:7px 10px;border:1px solid var(--line);border-radius:8px;font:inherit;background:#fff"><option value="pria">Pria</option><option value="wanita">Wanita</option></select></div>
+    <div class="sw" id="rUr"><span>Klien (pemesan) dari pihak<br><small style="color:var(--mut)">Nama pihak klien tampil lebih dulu</small></span><select id="cUr" style="padding:7px 10px;border:1px solid var(--line);border-radius:8px;font:inherit;background:#fff"><option value="pria">Pria</option><option value="wanita">Wanita</option></select></div>
    </div>
-   <div class="card">
+   <div class="card" id="cPs">
     <label class="l" for="ps" style="margin-top:0">Pesan undangan</label>
     <textarea id="ps" style="min-height:260px"></textarea>
     <small style="color:var(--mut)">Kata dalam kurung kurawal diganti otomatis: {nama} {pria} {wanita} {mempelai} {tanggal} {akad} {resepsi} {link}. Jangan hapus tanda kurung kurawalnya.</small>
     <div style="margin-top:8px"><button class="b o s" id="psR">Kembalikan bawaan</button></div>
    </div>
-   <div class="card"><label class="l" style="margin-top:0">Tampilan link saat dikirim</label><div class="prev"><img id="pvI" alt=""><div><b id="pvT"></b><span id="pvD"></span></div></div></div>
+   <div class="card" id="cPv"><label class="l" style="margin-top:0">Tampilan link saat dikirim</label><div class="prev"><img id="pvI" alt=""><div><b id="pvT"></b><span id="pvD"></span></div></div></div>
    <button class="b" id="setS" style="width:100%">Simpan pengaturan</button>
    <button class="b r" id="out" style="width:100%;margin-top:10px">Keluar</button>
   </div>
@@ -213,12 +213,26 @@ document.querySelectorAll('.tabs button').forEach(function(b){b.onclick=function
   $('#pTamu').classList.toggle('hide',b.dataset.t!=='tamu');$('#pUcapan').classList.toggle('hide',b.dataset.t!=='ucapan');$('#pSet').classList.toggle('hide',b.dataset.t!=='set');
 }});
 
+/* true/false di data-undangan.js > "panelAdmin": tampilkan atau sembunyikan tiap pengaturan di panel ini */
+function panelAdmin(){
+  var P=D.panelAdmin||{};function on(k){return P[k]!==false}
+  function tampil(sel,ok){var e=$(sel);if(e)e.style.display=ok?'':'none'}
+  tampil('#rUp',on('ucapanPublik'));tampil('#rTm',on('turutMengundang'));
+  tampil('#rR1',on('rekening'));tampil('#rR2',on('rekening'));
+  tampil('#rUr',on('urutanNama'));tampil('#cPs',on('pesanWa'));tampil('#cPv',on('pratinjauLink'));
+  var barisAda=['#rUp','#rTm','#rR1','#rR2','#rUr'].some(function(s){var e=$(s);return e&&e.style.display!=='none'&&!e.classList.contains('hide')});
+  tampil('#cSw',barisAda);
+  var ada=barisAda||on('pesanWa')||on('pratinjauLink');
+  var tab=document.querySelector('.tabs button[data-t="set"]');if(tab)tab.style.display=ada?'':'none';
+  tampil('#setS',ada);
+}
 function isiSet(){
   $('#cUp').checked=S.set.ucapanPublik!==false;$('#cTm').checked=!!S.set.turutTampil;$('#cR1').checked=S.set.rekening1!==false;$('#cR2').checked=S.set.rekening2!==false;
   $('#cUr').value=S.set.urutNama||((D.pihakKlien||D.urutanNama)==='wanita'?'wanita':'pria');hitungNama();
   $('#ps').value=S.set.pesan||DEFAULT;
   $('#rTm').classList.toggle('hide',!(D.turutMengundang&&D.turutMengundang.length));
   var h=(D.hadiah||[]).length;$('#rR1').classList.toggle('hide',h<1);$('#rR2').classList.toggle('hide',h<2);
+  panelAdmin();
   var ak=D.akad||D.resepsi||{},ev2=D.resepsi||D.akad||{};
   $('#pvI').src=BASEURL+'foto/og.jpg';$('#pvT').textContent='Undangan Pernikahan '+NAMA;
   $('#pvD').textContent='Kami mengundang Anda ke pernikahan '+NAMA+' - '+tgl(ak.tanggal)+' di '+(ev2.tempat||'')+'.';
