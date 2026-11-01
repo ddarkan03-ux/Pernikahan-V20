@@ -68,6 +68,14 @@ window.DATA = {
   ],
   "logoBank": true,
   "pihakKlien": "pria",
+  "panelAdmin": {
+    "ucapanPublik": true,
+    "turutMengundang": true,
+    "rekening": true,
+    "urutanNama": true,
+    "pesanWa": true,
+    "pratinjauLink": true
+  },
   "alamatKado": "Kp. Sindang Baru Desa Ciasmara",
   "turutMengundangTampil": false,
   "turutMengundang": [
