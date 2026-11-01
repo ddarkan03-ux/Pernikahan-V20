@@ -72,7 +72,7 @@ window.DATA = {
     "ucapanPublik": true,
     "turutMengundang": true,
     "rekening": true,
-    "urutanNama": true,
+    "urutanNama": false,
     "pesanWa": true,
     "pratinjauLink": true
   },
